@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import emberVersionIs from 'ember-version-is';
 
 export default Ember.Component.extend({
   classNames: ["infinity-loader"],
@@ -15,30 +14,27 @@ export default Ember.Component.extend({
 
   didRender() {
     this._super(...arguments);
-    if(emberVersionIs('greaterThanOrEqualTo', "1.13.0")) {
-      this._setup();
-    }
+    this._checkIfInView();
   },
 
   didInsertElement() {
     this._super(...arguments);
-    if(emberVersionIs('lessThan', "1.13.0")) {
-      this._setup();
-    }
-  },
-
-  _setup() {
     this._setupScrollable();
-    this.set('guid', Ember.guidFor(this));
     this._bindEvent('scroll');
     this._bindEvent('resize');
     this._checkIfInView();
+  },
+
+  init: function() {
+    this._super(...arguments);
+    this.set('guid', Ember.guidFor(this));
   },
 
   willDestroyElement() {
     this._super(...arguments);
     this._unbindEvent('scroll');
     this._unbindEvent('resize');
+    this.set('scrollable', this.get('scrollableStr'));
   },
 
   _bindEvent(eventName) {
@@ -66,6 +62,7 @@ export default Ember.Component.extend({
   _setupScrollable() {
     var scrollable = this.get('scrollable');
     if (Ember.typeOf(scrollable) === 'string') {
+      this.set('scrollableStr', scrollable);
       var items = Ember.$(scrollable);
       if (items.length === 1) {
         this.set('scrollable', items.eq(0));
