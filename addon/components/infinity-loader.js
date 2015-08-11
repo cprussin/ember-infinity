@@ -48,13 +48,10 @@ export default Ember.Component.extend({
   },
 
   _checkIfInView() {
-    var selfOffset       = this.$().offset().top;
-    var scrollable       = this.get("scrollable");
-    var scrollableBottom = scrollable.height() + scrollable.scrollTop();
-
-    var inView = selfOffset < scrollableBottom;
-
-    if (inView && !this.get('developmentMode')) {
+    if (this.get('developmentMode')) { return; }
+    var loaderTop = this.$().position().top;
+    if (loaderTop + this.$().height() <= 0) { return; }
+    if (loaderTop < this.get('scrollable').height() ) {
       this.sendAction('loadMoreAction');
     }
   },
