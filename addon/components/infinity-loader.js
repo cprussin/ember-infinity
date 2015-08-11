@@ -11,6 +11,7 @@ export default Ember.Component.extend({
   destroyOnInfinity: false,
   developmentMode: false,
   scrollable: null,
+  threshold: 250,
 
   didRender() {
     this._super(...arguments);
@@ -51,7 +52,7 @@ export default Ember.Component.extend({
     if (this.get('developmentMode')) { return; }
     var loaderTop = this.$().position().top;
     if (loaderTop + this.$().height() <= 0) { return; }
-    if (loaderTop < this.get('scrollable').height() ) {
+    if (loaderTop < this.get('scrollable').height() + this.get('threshold')) {
       this.sendAction('loadMoreAction');
     }
   },
